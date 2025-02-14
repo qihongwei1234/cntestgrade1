@@ -306,8 +306,8 @@
             category: "其他常用字",
             characters: [
                 { character: "不", pinyin: "bù" },
-                { character: "了", pinyin: "le,liǎo" },
-                { character: "和", pinyin: "hé,hè,huó,huò,hú" },
+                { character: "了", pinyin: "le,liǎo" },// 随机选择一个拼音
+                { character: "和", pinyin: "hé,hè,huó,huò,hú" },// 随机选择一个拼音
                 { character: "这", pinyin: "zhè" },
                 { character: "那", pinyin: "nà" },
                 { character: "谁", pinyin: "shuí" },
@@ -340,8 +340,7 @@
 
             // 随机选择 10 个字符
             while (selectedChars.length < 10) {
-                const randomCategory = characterData[Math.floor(Math.random() * characterData.length)];
-                const randomChar = randomCategory.characters[Math.floor(Math.random() * randomCategory.characters.length)];
+                const randomChar = characterData[Math.floor(Math.random() * characterData.length)];
                 if (!selectedChars.includes(randomChar)) {
                     selectedChars.push(randomChar);
                 }
@@ -356,8 +355,7 @@
 
                 // 添加 3 个干扰项
                 while (options.length < 4) {
-                    const randomCategory = characterData[Math.floor(Math.random() * characterData.length)];
-                    const randomPinyin = randomCategory.characters[Math.floor(Math.random() * randomCategory.characters.length)].pinyin;
+                    const randomPinyin = characterData[Math.floor(Math.random() * characterData.length)].pinyin;
                     if (!options.includes(randomPinyin)) {
                         options.push(randomPinyin);
                     }
