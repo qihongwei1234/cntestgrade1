@@ -110,7 +110,8 @@
     <script>
         // 更新后的汉字数据
         const characterData = [
-            { category: "数字与时间类", characters: [
+            {category: "数字与时间类",
+            characters: [
                 { character: "一", pinyin: "yī" },
                 { character: "二", pinyin: "èr" },
                 { character: "三", pinyin: "sān" },
@@ -130,8 +131,11 @@
                 { character: "早", pinyin: "zǎo" },
                 { character: "晚", pinyin: "wǎn" },
                 { character: "时", pinyin: "shí" }
-            ]},
-            { category: "家庭与人物类", characters: [
+            ]
+        },
+        {
+            category: "家庭与人物类",
+            characters: [
                 { character: "爸", pinyin: "bà" },
                 { character: "妈", pinyin: "mā" },
                 { character: "爷", pinyin: "yé" },
@@ -148,10 +152,13 @@
                 { character: "他", pinyin: "tā" },
                 { character: "我", pinyin: "wǒ" },
                 { character: "你", pinyin: "nǐ" },
-                { character: "们", pinyin: "men" },
+                { character: "们", pinyin: "mén" },
                 { character: "孩", pinyin: "hái" }
-            ]},
-            { category: "物品类", characters: [
+            ]
+        },
+        {
+            category: "物品类",
+            characters: [
                 { character: "木", pinyin: "mù" },
                 { character: "禾", pinyin: "hé" },
                 { character: "巾", pinyin: "jīn" },
@@ -170,8 +177,11 @@
                 { character: "灯", pinyin: "dēng" },
                 { character: "笔", pinyin: "bǐ" },
                 { character: "纸", pinyin: "zhǐ" }
-            ]},
-            { category: "动作类", characters: [
+            ]
+        },
+        {
+            category: "动作类",
+            characters: [
                 { character: "走", pinyin: "zǒu" },
                 { character: "开", pinyin: "kāi" },
                 { character: "见", pinyin: "jiàn" },
@@ -188,8 +198,11 @@
                 { character: "笑", pinyin: "xiào" },
                 { character: "跑", pinyin: "pǎo" },
                 { character: "跳", pinyin: "tiào" }
-            ]},
-            { category: "自然现象类", characters: [
+            ]
+        },
+        {
+            category: "自然现象类",
+            characters: [
                 { character: "日", pinyin: "rì" },
                 { character: "月", pinyin: "yuè" },
                 { character: "天", pinyin: "tiān" },
@@ -204,8 +217,11 @@
                 { character: "电", pinyin: "diàn" },
                 { character: "雪", pinyin: "xuě" },
                 { character: "星", pinyin: "xīng" }
-            ]},
-            { category: "抽象概念类", characters: [
+            ]
+        },
+        {
+            category: "抽象概念类",
+            characters: [
                 { character: "大", pinyin: "dà" },
                 { character: "小", pinyin: "xiǎo" },
                 { character: "多", pinyin: "duō" },
@@ -222,8 +238,11 @@
                 { character: "热", pinyin: "rè" },
                 { character: "忙", pinyin: "máng" },
                 { character: "闲", pinyin: "xián" }
-            ]},
-            { category: "社会与文化类", characters: [
+            ]
+        },
+        {
+            category: "社会与文化类",
+            characters: [
                 { character: "家", pinyin: "jiā" },
                 { character: "校", pinyin: "xiào" },
                 { character: "城", pinyin: "chéng" },
@@ -240,8 +259,11 @@
                 { character: "王", pinyin: "wáng" },
                 { character: "贝", pinyin: "bèi" },
                 { character: "原", pinyin: "yuán" }
-            ]},
-            { category: "动物与植物类", characters: [
+            ]
+        },
+        {
+            category: "动物与植物类",
+            characters: [
                 { character: "牛", pinyin: "niú" },
                 { character: "羊", pinyin: "yáng" },
                 { character: "马", pinyin: "mǎ" },
@@ -259,8 +281,11 @@
                 { character: "树", pinyin: "shù" },
                 { character: "花", pinyin: "huā" },
                 { character: "草", pinyin: "cǎo" }
-            ]},
-            { category: "方位与方向类", characters: [
+            ]
+        },
+        {
+            category: "方位与方向类",
+            characters: [
                 { character: "上", pinyin: "shàng" },
                 { character: "下", pinyin: "xià" },
                 { character: "左", pinyin: "zuǒ" },
@@ -275,8 +300,11 @@
                 { character: "西", pinyin: "xī" },
                 { character: "南", pinyin: "nán" },
                 { character: "北", pinyin: "běi" }
-            ]},
-            { category: "其他常用字", characters: [
+            ]
+        },
+        {
+            category: "其他常用字",
+            characters: [
                 { character: "不", pinyin: "bù" },
                 { character: "了", pinyin: "le,liǎo" },
                 { character: "和", pinyin: "hé,hè,huó,huò,hú" },
@@ -292,9 +320,9 @@
                 { character: "在", pinyin: "zài" },
                 { character: "什", pinyin: "shén" },
                 { character: "么", pinyin: "me" }
-            ]}
-        ];
-
+            ]
+        }
+    ]
         let score = 0;
         let startTime;
 
