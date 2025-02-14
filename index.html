@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础汉字识读测试（一年级）</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(to bottom, #f0f8ff, #e6f7ff);
+            color: #333;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 28px;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 测试报告卡片样式 */
+        .report-card {
+            background: #f9f9f9; /* 区分背景色 */
+            border-left: 5px solid #007BFF; /* 左侧边框强调 */
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* 按钮样式 */
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* 结果反馈样式 */
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>基础汉字识读测试（一年级）📝</h1>
+    <div class="container">
+        <form id="testForm">
+            <div id="questions"></div>
+            <button type="button" id="submitButton" onclick="submitTest()">提交</button>
+        </form>
+        <div id="result" class="report-card" style="display: none;"></div>
+        <button id="retryButton" style="display: none;" onclick="location.reload()">再测一次</button>
+    </div>
+
+    <audio id="correctSound" src="https://www.soundjay.com/button/beep-07.mp3"></audio>
+    <audio id="wrongSound" src="https://www.soundjay.com/button/beep-09.mp3"></audio>
+
+    <script>
+        // 更新后的汉字数据
+        const characterData = [
+            { category: "数字与时间类", characters: [
+                { character: "一", pinyin: "yī" },
+                { character: "二", pinyin: "èr" },
+                { character: "三", pinyin: "sān" },
+                { character: "四", pinyin: "sì" },
+                { character: "五", pinyin: "wǔ" },
+                { character: "六", pinyin: "liù" },
+                { character: "七", pinyin: "qī" },
+                { character: "八", pinyin: "bā" },
+                { character: "九", pinyin: "jiǔ" },
+                { character: "十", pinyin: "shí" },
+                { character: "万", pinyin: "wàn" },
+                { character: "百", pinyin: "bǎi" },
+                { character: "年", pinyin: "nián" },
+                { character: "岁", pinyin: "suì" },
+                { character: "春", pinyin: "chūn" },
+                { character: "冬", pinyin: "dōng" },
+                { character: "早", pinyin: "zǎo" },
+                { character: "晚", pinyin: "wǎn" },
+                { character: "时", pinyin: "shí" }
+            ]},
+            { category: "家庭与人物类", characters: [
+                { character: "爸", pinyin: "bà" },
+                { character: "妈", pinyin: "mā" },
+                { character: "爷", pinyin: "yé" },
+                { character: "奶", pinyin: "nǎi" },
+                { character: "哥", pinyin: "gē" },
+                { character: "姐", pinyin: "jiě" },
+                { character: "弟", pinyin: "dì" },
+                { character: "妹", pinyin: "mèi" },
+                { character: "父", pinyin: "fù" },
+                { character: "母", pinyin: "mǔ" },
+                { character: "女", pinyin: "nǚ" },
+                { character: "男", pinyin: "nán" },
+                { character: "她", pinyin: "tā" },
+                { character: "他", pinyin: "tā" },
+                { character: "我", pinyin: "wǒ" },
+                { character: "你", pinyin: "nǐ" },
+                { character: "们", pinyin: "men" },
+                { character: "孩", pinyin: "hái" }
+            ]},
+            { category: "物品类", characters: [
+                { character: "木", pinyin: "mù" },
+                { character: "禾", pinyin: "hé" },
+                { character: "巾", pinyin: "jīn" },
+                { character: "牙", pinyin: "yá" },
+                { character: "尺", pinyin: "chǐ" },
+                { character: "毛", pinyin: "máo" },
+                { character: "门", pinyin: "mén" },
+                { character: "车", pinyin: "chē" },
+                { character: "书", pinyin: "shū" },
+                { character: "本", pinyin: "běn" },
+                { character: "业", pinyin: "yè" },
+                { character: "平", pinyin: "píng" },
+                { character: "桌", pinyin: "zhuō" },
+                { character: "椅", pinyin: "yǐ" },
+                { character: "床", pinyin: "chuáng" },
+                { character: "灯", pinyin: "dēng" },
+                { character: "笔", pinyin: "bǐ" },
+                { character: "纸", pinyin: "zhǐ" }
+            ]},
+            { category: "动作类", characters: [
+                { character: "走", pinyin: "zǒu" },
+                { character: "开", pinyin: "kāi" },
+                { character: "见", pinyin: "jiàn" },
+                { character: "飞", pinyin: "fēi" },
+                { character: "吃", pinyin: "chī" },
+                { character: "喝", pinyin: "hē" },
+                { character: "看", pinyin: "kàn" },
+                { character: "听", pinyin: "tīng" },
+                { character: "说", pinyin: "shuō" },
+                { character: "写", pinyin: "xiě" },
+                { character: "洗", pinyin: "xǐ" },
+                { character: "扫", pinyin: "sǎo" },
+                { character: "画", pinyin: "huà" },
+                { character: "笑", pinyin: "xiào" },
+                { character: "跑", pinyin: "pǎo" },
+                { character: "跳", pinyin: "tiào" }
+            ]},
+            { category: "自然现象类", characters: [
+                { character: "日", pinyin: "rì" },
+                { character: "月", pinyin: "yuè" },
+                { character: "天", pinyin: "tiān" },
+                { character: "地", pinyin: "dì" },
+                { character: "山", pinyin: "shān" },
+                { character: "水", pinyin: "shuǐ" },
+                { character: "火", pinyin: "huǒ" },
+                { character: "风", pinyin: "fēng" },
+                { character: "云", pinyin: "yún" },
+                { character: "雨", pinyin: "yǔ" },
+                { character: "雷", pinyin: "léi" },
+                { character: "电", pinyin: "diàn" },
+                { character: "雪", pinyin: "xuě" },
+                { character: "星", pinyin: "xīng" }
+            ]},
+            { category: "抽象概念类", characters: [
+                { character: "大", pinyin: "dà" },
+                { character: "小", pinyin: "xiǎo" },
+                { character: "多", pinyin: "duō" },
+                { character: "少", pinyin: "shǎo" },
+                { character: "长", pinyin: "cháng" },
+                { character: "短", pinyin: "duǎn" },
+                { character: "高", pinyin: "gāo" },
+                { character: "低", pinyin: "dī" },
+                { character: "胖", pinyin: "pàng" },
+                { character: "瘦", pinyin: "shòu" },
+                { character: "快", pinyin: "kuài" },
+                { character: "慢", pinyin: "màn" },
+                { character: "冷", pinyin: "lěng" },
+                { character: "热", pinyin: "rè" },
+                { character: "忙", pinyin: "máng" },
+                { character: "闲", pinyin: "xián" }
+            ]},
+            { category: "社会与文化类", characters: [
+                { character: "家", pinyin: "jiā" },
+                { character: "校", pinyin: "xiào" },
+                { character: "城", pinyin: "chéng" },
+                { character: "乡", pinyin: "xiāng" },
+                { character: "街", pinyin: "jiē" },
+                { character: "道", pinyin: "dào" },
+                { character: "桥", pinyin: "qiáo" },
+                { character: "楼", pinyin: "lóu" },
+                { character: "庙", pinyin: "miào" },
+                { character: "寺", pinyin: "sì" },
+                { character: "园", pinyin: "yuán" },
+                { character: "井", pinyin: "jǐng" },
+                { character: "面", pinyin: "miàn" },
+                { character: "王", pinyin: "wáng" },
+                { character: "贝", pinyin: "bèi" },
+                { character: "原", pinyin: "yuán" }
+            ]},
+            { category: "动物与植物类", characters: [
+                { character: "牛", pinyin: "niú" },
+                { character: "羊", pinyin: "yáng" },
+                { character: "马", pinyin: "mǎ" },
+                { character: "狗", pinyin: "gǒu" },
+                { character: "猫", pinyin: "māo" },
+                { character: "鸡", pinyin: "jī" },
+                { character: "鸭", pinyin: "yā" },
+                { character: "鱼", pinyin: "yú" },
+                { character: "鸟", pinyin: "niǎo" },
+                { character: "虫", pinyin: "chóng" },
+                { character: "蚂", pinyin: "mǎ" },
+                { character: "蚁", pinyin: "yǐ" },
+                { character: "虾", pinyin: "xiā" },
+                { character: "竹", pinyin: "zhú" },
+                { character: "树", pinyin: "shù" },
+                { character: "花", pinyin: "huā" },
+                { character: "草", pinyin: "cǎo" }
+            ]},
+            { category: "方位与方向类", characters: [
+                { character: "上", pinyin: "shàng" },
+                { character: "下", pinyin: "xià" },
+                { character: "左", pinyin: "zuǒ" },
+                { character: "右", pinyin: "yòu" },
+                { character: "前", pinyin: "qián" },
+                { character: "后", pinyin: "hòu" },
+                { character: "里", pinyin: "lǐ" },
+                { character: "外", pinyin: "wài" },
+                { character: "中", pinyin: "zhōng" },
+                { character: "边", pinyin: "biān" },
+                { character: "东", pinyin: "dōng" },
+                { character: "西", pinyin: "xī" },
+                { character: "南", pinyin: "nán" },
+                { character: "北", pinyin: "běi" }
+            ]},
+            { category: "其他常用字", characters: [
+                { character: "不", pinyin: "bù" },
+                { character: "了", pinyin: "le,liǎo" },
+                { character: "和", pinyin: "hé,hè,huó,huò,hú" },
+                { character: "这", pinyin: "zhè" },
+                { character: "那", pinyin: "nà" },
+                { character: "谁", pinyin: "shuí" },
+                { character: "哪", pinyin: "nǎ" },
+                { character: "吗", pinyin: "ma" },
+                { character: "吧", pinyin: "ba" },
+                { character: "呢", pinyin: "ne" },
+                { character: "呀", pinyin: "ya" },
+                { character: "有", pinyin: "yǒu" },
+                { character: "在", pinyin: "zài" },
+                { character: "什", pinyin: "shén" },
+                { character: "么", pinyin: "me" }
+            ]}
+        ];
+
+        let score = 0;
+        let startTime;
+
+        // 初始化页面
+        window.onload = () => {
+            generateQuestions();
+            startTime = new Date(); // 记录测试开始时间
+        };
+
+        // 随机生成测试问题（10 道题）
+        function generateQuestions() {
+            const questionsDiv = document.getElementById('questions');
+            let questionsHTML = '';
+            const selectedChars = [];
+
+            // 随机选择 10 个字符
+            while (selectedChars.length < 10) {
+                const randomCategory = characterData[Math.floor(Math.random() * characterData.length)];
+                const randomChar = randomCategory.characters[Math.floor(Math.random() * randomCategory.characters.length)];
+                if (!selectedChars.includes(randomChar)) {
+                    selectedChars.push(randomChar);
+                }
+            }
+
+            // 保存选中的题目
+            window.selectedChars = selectedChars;
+
+            // 生成题目
+            selectedChars.forEach((char, index) => {
+                const options = [char.pinyin];
+
+                // 添加 3 个干扰项
+                while (options.length < 4) {
+                    const randomCategory = characterData[Math.floor(Math.random() * characterData.length)];
+                    const randomPinyin = randomCategory.characters[Math.floor(Math.random() * randomCategory.characters.length)].pinyin;
+                    if (!options.includes(randomPinyin)) {
+                        options.push(randomPinyin);
+                    }
+                }
+
+                // 打乱选项顺序
+                options.sort(() => Math.random() - 0.5);
+
+                questionsHTML += `
+                    <div class="card" id="q_${index}">
+                        <p>${index + 1}. 请选择正确的拼音：${char.character}</p>
+                        ${options.map(option => `
+                            <label>
+                                <input type="radio" name="q_${index}" value="${option}">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+            });
+
+            questionsDiv.innerHTML = questionsHTML;
+        }
+
+        // 提交表单并计算得分
+        function submitTest() {
+            const endTime = new Date(); // 记录测试结束时间
+            const testDuration = Math.floor((endTime - startTime) / 1000); // 测试用时（秒）
+
+            const resultDiv = document.getElementById('result');
+            const totalQuestions = 10;
+
+            Array.from(document.getElementById('testForm').elements).forEach(element => {
+                if (element.type === 'radio' && element.checked) {
+                    const questionIndex = element.name.split('_')[1];
+                    const correctPinyin = window.selectedChars[questionIndex].pinyin;
+                    const questionDiv = document.getElementById(`q_${questionIndex}`);
+                    const userAnswer = element.value;
+
+                    // 显示用户选择的答案
+                    const labels = questionDiv.querySelectorAll('label');
+                    labels.forEach(label => {
+                        const input = label.querySelector('input');
+                        if (input.value === correctPinyin) {
+                            label.innerHTML += `<span class="correct"> ✅</span>`;
+                        } else if (input.value === userAnswer) {
+                            label.innerHTML += `<span class="incorrect"> ❌</span>`;
+                        }
+                    });
+
+                    // 显示正确答案
+                    if (userAnswer === correctPinyin) {
+                        score++;
+                        document.getElementById('correctSound').play();
+                    } else {
+                        questionDiv.innerHTML += `<p class="correct-answer">正确答案是：${correctPinyin}</p>`;
+                        document.getElementById('wrongSound').play();
+                    }
+                }
+            });
+
+            const accuracy = (score / totalQuestions) * 100;
+
+            // 动态生成测试报告
+            const report = `
+                <h2>亲爱的汉字小达人：</h2>
+                <p>你完成了这次测试，总共有 ${totalQuestions} 道题，你答对了 ${score} 题，正确率是 ${accuracy.toFixed(2)}%。</p>
+                <p>本次测试用时：${testDuration} 秒。</p>
+                <p>${accuracy >= 80 ? "太棒了！你的汉字识字能力非常出色！🎉" : ""}
+                ${accuracy >= 50 && accuracy < 80 ? "不错哦！你已经掌握了不少常用汉字，继续加油！💪" : ""}
+                ${accuracy < 50 ? "别灰心！学习汉字是一个慢慢积累的过程，你已经迈出了重要的一步！🌟" : ""}</p>
+                <p>下面是你的表现分析：</p>
+                <ul>
+                    <li><strong>你的强项：</strong> 答对的题目展示了你对这些汉字的熟悉程度。</li>
+                    <li><strong>需要加强的地方：</strong> 对于答错的题目，建议多复习相关汉字。</li>
+                </ul>
+                <p>希望下次测试时能看到你更棒的成绩！😊</p>
+            `;
+
+            // 显示测试报告
+            resultDiv.innerHTML = report;
+            resultDiv.style.display = 'block';
+
+            // 显示“再测一次”按钮
+            document.getElementById('retryButton').style.display = 'block';
+
+            // 禁用提交按钮
+            document.getElementById('submitButton').disabled = true;
+        }
+    </script>
+</body>
+</html>
